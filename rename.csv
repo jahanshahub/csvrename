@@ -1,0 +1,22 @@
+import csv
+
+input_file = 'your_input_file.csv'
+output_file = 'your_output_file.csv'
+
+with open(input_file, 'r', newline='', encoding='utf-8') as csvfile_in:
+    with open(output_file, 'w', newline='', encoding='utf-8') as csvfile_out:
+        reader = csv.DictReader(csvfile_in)
+        fieldnames = reader.fieldnames
+
+        writer = csv.DictWriter(csvfile_out, fieldnames=fieldnames)
+        writer.writeheader()
+
+        for row in reader:
+            # Check if the "published" column is TRUE
+            if row['published'].lower() == 'true':
+                # Check if the "element" or "Elements 2024" tag is not present
+                if 'element' not in row['tags'].split(',') and 'Elements 2024' not in row['tags'].split(','):
+                    row['Option2 Value'] = row['Option2 Value'] + ' (R)'
+
+            # Write the updated row to the output CSV file
+            writer.writerow(row)
