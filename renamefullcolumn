@@ -1,0 +1,24 @@
+import pandas as pd
+
+# Load the CSV file
+file_path = '/path/to/your/file.csv'  # Replace with the actual file path
+df = pd.read_csv(file_path)
+
+# Define a function to append "(R)" to the Option2 Value if not part of element or Elements 2024 collection and if not already present
+def modify_option2_value(row):
+    # Check if the product is part of the collection or if (R) is already appended
+    if pd.notna(row['Tags']) and ('element' in row['Tags'] or 'Elements 2024' in row['Tags']):
+        return row['Option2 Value']
+    else:
+        # Append (R) if not already present
+        if pd.notna(row['Option2 Value']) and not row['Option2 Value'].endswith('(R)'):
+            return row['Option2 Value'] + " (R)"
+        else:
+            return row['Option2 Value']
+
+# Apply the function to modify the Option2 Value
+df['Option2 Value'] = df.apply(modify_option2_value, axis=1)
+
+# Save the updated DataFrame to a new CSV file
+updated_file_path = '/path/to/your/updated_file.csv'  # Replace with your preferred save location
+df.to_csv(updated_file_path, index=False)
